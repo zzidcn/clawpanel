@@ -1,7 +1,6 @@
 /// 消息渠道管理
 /// 负责 Telegram / Discord / QQ Bot 等消息渠道的配置持久化与凭证校验
 /// 配置写入 openclaw.json 的 channels / plugins 节点
-
 use serde_json::{json, Map, Value};
 
 /// 读取指定平台的当前配置（从 openclaw.json 中提取表单可用的值）
@@ -237,10 +236,7 @@ pub async fn save_messaging_platform(
             entry.insert("appId".into(), Value::String(app_id));
             entry.insert("appSecret".into(), Value::String(app_secret));
             entry.insert("enabled".into(), Value::Bool(true));
-            entry.insert(
-                "connectionMode".into(),
-                Value::String("websocket".into()),
-            );
+            entry.insert("connectionMode".into(), Value::String("websocket".into()));
 
             // 域名（默认 feishu，国际版选 lark）
             let domain = form_obj
@@ -320,10 +316,7 @@ pub async fn toggle_messaging_platform(
 
 /// 在线校验 Bot 凭证（调用平台 API 验证 Token 是否有效）
 #[tauri::command]
-pub async fn verify_bot_token(
-    platform: String,
-    form: Value,
-) -> Result<Value, String> {
+pub async fn verify_bot_token(platform: String, form: Value) -> Result<Value, String> {
     let form_obj = form.as_object().ok_or("表单数据格式错误")?;
     let client = reqwest::Client::builder()
         .timeout(std::time::Duration::from_secs(15))
@@ -551,7 +544,9 @@ pub async fn install_qqbot_plugin(app: tauri::AppHandle) -> Result<String, Strin
     let _ = handle.join();
     let _ = app.emit("plugin-progress", 95);
 
-    let status = child.wait().map_err(|e| format!("等待安装进程失败: {}", e))?;
+    let status = child
+        .wait()
+        .map_err(|e| format!("等待安装进程失败: {}", e))?;
     let _ = app.emit("plugin-progress", 100);
 
     if !status.success() {

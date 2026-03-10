@@ -149,10 +149,7 @@ fn patch_gateway_origins() {
                         merged.push(r.clone());
                     }
                 }
-                cui.insert(
-                    "allowedOrigins".to_string(),
-                    serde_json::json!(merged),
-                );
+                cui.insert("allowedOrigins".to_string(), serde_json::json!(merged));
             }
         }
     }

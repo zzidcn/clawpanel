@@ -112,7 +112,9 @@ pub async fn skills_install_dep(kind: String, spec: Value) -> Result<Value, Stri
     cmd.args(&args).env("PATH", &path_env);
     #[cfg(target_os = "windows")]
     cmd.creation_flags(0x08000000);
-    let output = cmd.output().await
+    let output = cmd
+        .output()
+        .await
         .map_err(|e| format!("执行 {program} 失败: {e}"))?;
 
     let stdout = String::from_utf8_lossy(&output.stdout).to_string();
@@ -150,7 +152,9 @@ pub async fn skills_clawhub_install(slug: String) -> Result<Value, String> {
         .current_dir(&home);
     #[cfg(target_os = "windows")]
     cmd.creation_flags(0x08000000);
-    let output = cmd.output().await
+    let output = cmd
+        .output()
+        .await
         .map_err(|e| format!("执行 clawhub 失败: {e}"))?;
 
     let stdout = String::from_utf8_lossy(&output.stdout).to_string();
@@ -181,7 +185,9 @@ pub async fn skills_clawhub_search(query: String) -> Result<Value, String> {
         .env("PATH", &path_env);
     #[cfg(target_os = "windows")]
     cmd.creation_flags(0x08000000);
-    let output = cmd.output().await
+    let output = cmd
+        .output()
+        .await
         .map_err(|e| format!("执行 clawhub 失败: {e}"))?;
 
     if !output.status.success() {

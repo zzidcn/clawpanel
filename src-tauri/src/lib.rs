@@ -4,8 +4,8 @@ mod tray;
 mod utils;
 
 use commands::{
-    agent, assistant, config, device, extensions, logs, memory, messaging, pairing, service, skills,
-    update,
+    agent, assistant, config, device, extensions, logs, memory, messaging, pairing, service,
+    skills, update,
 };
 
 pub fn run() {
