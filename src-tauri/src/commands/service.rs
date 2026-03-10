@@ -1086,7 +1086,7 @@ pub async fn restart_service(label: String) -> Result<(), String> {
     result
 }
 
-#[cfg(test)]
+#[cfg(all(test, target_os = "windows"))]
 mod tests {
     use super::{looks_like_gateway_command_line, parse_listening_pids_from_netstat};
 
