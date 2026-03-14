@@ -670,7 +670,13 @@ mod platform {
             let base = Path::new(dir);
             candidates.push(base.join("openclaw.cmd"));
             candidates.push(base.join("openclaw"));
-            candidates.push(base.join("node_modules").join("@qingchencloud").join("openclaw-zh").join("bin").join("openclaw.js"));
+            candidates.push(
+                base.join("node_modules")
+                    .join("@qingchencloud")
+                    .join("openclaw-zh")
+                    .join("bin")
+                    .join("openclaw.js"),
+            );
         }
 
         candidates

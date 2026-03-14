@@ -33,9 +33,8 @@ async fn agent_workspace(agent_id: &str) -> Result<PathBuf, String> {
     }
 
     let stdout = String::from_utf8_lossy(&output.stdout);
-    let agents: serde_json::Value =
-        crate::commands::skills::extract_json_pub(&stdout)
-            .ok_or_else(|| "解析 JSON 失败: 输出中未找到有效 JSON".to_string())?;
+    let agents: serde_json::Value = crate::commands::skills::extract_json_pub(&stdout)
+        .ok_or_else(|| "解析 JSON 失败: 输出中未找到有效 JSON".to_string())?;
 
     if let Some(arr) = agents.as_array() {
         for a in arr {

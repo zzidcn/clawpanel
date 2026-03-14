@@ -247,7 +247,9 @@ fn pre_install_cleanup() {
     }
     #[cfg(target_os = "linux")]
     {
-        let _ = Command::new("pkill").args(["-f", "openclaw.*gateway"]).output();
+        let _ = Command::new("pkill")
+            .args(["-f", "openclaw.*gateway"])
+            .output();
     }
 
     // 2. 清理 npm 全局 bin 目录下的 openclaw 残留文件（Windows EEXIST 根因）
@@ -657,7 +659,8 @@ async fn get_local_version() -> Option<String> {
 
 /// 从 npm registry 获取最新版本号，超时 5 秒
 async fn get_latest_version_for(source: &str) -> Option<String> {
-    let client = crate::commands::build_http_client(std::time::Duration::from_secs(2), None).ok()?;
+    let client =
+        crate::commands::build_http_client(std::time::Duration::from_secs(2), None).ok()?;
     let pkg = npm_package_name(source)
         .replace('/', "%2F")
         .replace('@', "%40");
@@ -840,8 +843,12 @@ pub async fn upgrade_openclaw(
         use tauri::Emitter;
         let result = upgrade_openclaw_inner(app2.clone(), source, version).await;
         match result {
-            Ok(msg) => { let _ = app2.emit("upgrade-done", &msg); }
-            Err(err) => { let _ = app2.emit("upgrade-error", &err); }
+            Ok(msg) => {
+                let _ = app2.emit("upgrade-done", &msg);
+            }
+            Err(err) => {
+                let _ = app2.emit("upgrade-error", &err);
+            }
         }
     });
     Ok("任务已启动".into())
@@ -920,7 +927,15 @@ async fn upgrade_openclaw_inner(
     };
 
     let mut install_cmd = npm_command();
-    install_cmd.args(["install", "-g", &pkg, "--force", "--registry", registry, "--verbose"]);
+    install_cmd.args([
+        "install",
+        "-g",
+        &pkg,
+        "--force",
+        "--registry",
+        registry,
+        "--verbose",
+    ]);
     apply_git_install_env(&mut install_cmd);
     let mut child = install_cmd
         .stdout(Stdio::piped())
@@ -976,7 +991,15 @@ async fn upgrade_openclaw_inner(
             let _ = app.emit("upgrade-progress", 15);
             let fallback = "https://registry.npmjs.org";
             let mut install_cmd2 = npm_command();
-            install_cmd2.args(["install", "-g", &pkg, "--force", "--registry", fallback, "--verbose"]);
+            install_cmd2.args([
+                "install",
+                "-g",
+                &pkg,
+                "--force",
+                "--registry",
+                fallback,
+                "--verbose",
+            ]);
             apply_git_install_env(&mut install_cmd2);
             let mut child2 = install_cmd2
                 .stdout(Stdio::piped())
@@ -1111,8 +1134,12 @@ pub async fn uninstall_openclaw(
         use tauri::Emitter;
         let result = uninstall_openclaw_inner(app2.clone(), clean_config).await;
         match result {
-            Ok(msg) => { let _ = app2.emit("upgrade-done", &msg); }
-            Err(err) => { let _ = app2.emit("upgrade-error", &err); }
+            Ok(msg) => {
+                let _ = app2.emit("upgrade-done", &msg);
+            }
+            Err(err) => {
+                let _ = app2.emit("upgrade-error", &err);
+            }
         }
     });
     Ok("任务已启动".into())
@@ -1699,8 +1726,9 @@ pub async fn test_model(
     let api_type = normalize_model_api_type(api_type.as_deref().unwrap_or("openai-completions"));
     let base = normalize_base_url_for_api(&base_url, api_type);
 
-    let client = crate::commands::build_http_client_no_proxy(std::time::Duration::from_secs(30), None)
-        .map_err(|e| format!("创建 HTTP 客户端失败: {e}"))?;
+    let client =
+        crate::commands::build_http_client_no_proxy(std::time::Duration::from_secs(30), None)
+            .map_err(|e| format!("创建 HTTP 客户端失败: {e}"))?;
 
     let resp = match api_type {
         "anthropic-messages" => {
@@ -1843,8 +1871,9 @@ pub async fn list_remote_models(
     let api_type = normalize_model_api_type(api_type.as_deref().unwrap_or("openai-completions"));
     let base = normalize_base_url_for_api(&base_url, api_type);
 
-    let client = crate::commands::build_http_client_no_proxy(std::time::Duration::from_secs(15), None)
-        .map_err(|e| format!("创建 HTTP 客户端失败: {e}"))?;
+    let client =
+        crate::commands::build_http_client_no_proxy(std::time::Duration::from_secs(15), None)
+            .map_err(|e| format!("创建 HTTP 客户端失败: {e}"))?;
 
     let resp = match api_type {
         "anthropic-messages" => {
@@ -2142,18 +2171,15 @@ pub async fn test_proxy(url: Option<String>) -> Result<Value, String> {
 
     let target = url.unwrap_or_else(|| "https://registry.npmjs.org/-/ping".to_string());
 
-    let client = crate::commands::build_http_client(std::time::Duration::from_secs(10), Some("ClawPanel"))
-        .map_err(|e| format!("创建代理客户端失败: {e}"))?;
+    let client =
+        crate::commands::build_http_client(std::time::Duration::from_secs(10), Some("ClawPanel"))
+            .map_err(|e| format!("创建代理客户端失败: {e}"))?;
 
     let start = std::time::Instant::now();
-    let resp = client
-        .get(&target)
-        .send()
-        .await
-        .map_err(|e| {
-            let elapsed = start.elapsed().as_millis();
-            format!("代理连接失败 ({elapsed}ms): {e}")
-        })?;
+    let resp = client.get(&target).send().await.map_err(|e| {
+        let elapsed = start.elapsed().as_millis();
+        format!("代理连接失败 ({elapsed}ms): {e}")
+    })?;
 
     let elapsed = start.elapsed().as_millis();
     let status = resp.status().as_u16();
