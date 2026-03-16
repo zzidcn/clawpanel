@@ -1,9 +1,9 @@
 {
   "version": "0.9.3",
-  "minAppVersion": "0.9.0",
-  "hash": "",
+  "minAppVersion": "0.9.3",
+  "hash": "sha256:8e0fde22325afcdce6161c5bcd31b31b2bdd88cba5cf24204ad0eae005f3d375",
   "url": "https://github.com/qingchencloud/clawpanel/releases/download/v0.9.3/web-0.9.3.zip",
-  "size": 0,
-  "changelog": "ARM性能优化、R2 CDN安装加速、定时任务修复、Agent管理修复、Gateway配置污染修复等",
-  "releasedAt": "2026-03-16T21:00:00Z"
+  "size": 1986441,
+  "changelog": "",
+  "releasedAt": "2026-03-16T15:56:13Z"
 }
